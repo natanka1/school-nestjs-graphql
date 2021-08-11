@@ -14,9 +14,13 @@ export class ClassroomService {
   async create(classroom: Classroom): Promise<Classroom> {
     try{
       const doc = new this.classroomModel(classroom)
-      const result = await doc.save();
+      const savedDoc = await doc.save();
+      const result = savedDoc.toObject()
+      delete result._id
+      delete result.__v
+      
       this.logger.log("classroom created")
-      return result;
+      return result
     } catch(err){
      throw(new BadRequestException(err));
     }

@@ -18,8 +18,6 @@ export class ClassroomController {
   async create(@Body() createClassroomDto: CreateClassroomDto /**!!! Using a temporary type for Swagger compatibility (DTO) */) {
       // Casting from dto type to schema 
       const classroom = cast<CreateClassroomDto, Classroom>(createClassroomDto)
-      // const obj: unknown = createClassroomDto;
-      // const classroom: Classroom = obj as Classroom;
       const classroomDoc = await this.classService.create(classroom);
       const classroomDto = (new createClassroom_SchemaToDtoPipe()).transform(classroomDoc, null)
       return classroomDto

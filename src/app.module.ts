@@ -1,12 +1,26 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { GraphQLModule } from '@nestjs/graphql';
+
 import { AuthMiddleware} from './common/middleware/auth.middleware'
 import { ClassroomModule } from './classroom/classroom.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { StudentModule } from './student/student.module';
 
+import {join} from 'path'
+
 @Module({
-  imports: [ConfigModule.forRoot(), ClassroomModule, MongooseModule.forRoot(process.env.DB_URL), StudentModule ]
+  imports: [
+    ConfigModule.forRoot(), 
+    GraphQLModule.forRoot({
+      debug: false,
+      playground: true,
+      typePaths: ['./**/*.graphql'], 
+      installSubscriptionHandlers: true,
+    }), 
+    ClassroomModule, 
+    MongooseModule.forRoot(process.env.DB_URL), 
+    StudentModule ]
 
 })
 export class AppModule implements NestModule{

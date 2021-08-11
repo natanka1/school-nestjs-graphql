@@ -1,0 +1,17 @@
+type Query {
+  classrooms: [Classroom]
+}
+
+type Mutation {
+  createClassroom(createClassroomInput: CreateClassroomInput): Classroom
+}
+
+type Classroom {
+  name: String
+  size: Int
+}
+
+input CreateClassroomInput {
+  name: String
+  age: Int
+}
