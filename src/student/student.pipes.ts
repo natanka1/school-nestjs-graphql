@@ -12,15 +12,18 @@ const dtoToSchemaDictionary: ObjectRenameFieldsMap = [
 
 @Injectable()
 export class createStudent_DtoToSchemaPipe implements PipeTransform<CreateStudentDto, Student> {
-  transform(value: CreateStudentDto, metadata: ArgumentMetadata): Student {
+  transform(value: CreateStudentDto, metadata: ArgumentMetadata): any {
     const student = renameProperties<CreateStudentDto, Student>({from:value, map: dtoToSchemaDictionary})
+
     return student;
   }
 }
 
 export class createStudent_SchemaToDtoPipe implements PipeTransform<Student, CreateStudentDto> {
   transform(value: Student, metadata: ArgumentMetadata): CreateStudentDto {
+
     const studentDto = renameProperties<Student, CreateStudentDto>({from:value, map: dtoToSchemaDictionary, isReversedMap:true})
+
     return studentDto;
   }
 }

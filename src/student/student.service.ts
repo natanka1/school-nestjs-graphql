@@ -12,18 +12,21 @@ export class StudentService {
 
   async create(student: Student) {
     try {
-      const classroom = await this.classroomModel.findOne({className: student.classroom}).select('_id')
-      let studentModified = {...student, classroom: classroom._id};
+
+      const classroom = await this.classroomModel.findOne({className: student.classroom}).select('className')
+
+      let studentModified = {...student, classroom: classroom.toObject().className};
+
       const doc = new this.studentModel(studentModified);
+
       const savedDoc = await doc.save()
 
-      const savedStudent = await this.studentModel.findById(savedDoc._id).populate("classroom");
-      const obj: unknown = savedStudent.classroom;
-      const classroomName = obj['className'];
+      const savedStudent = await this.studentModel.findById(savedDoc._id)
+      
       const response = {
         id: savedStudent._id,
         privateName: savedStudent.privateName,
-        classroom: classroomName
+        classroom: savedStudent.classroom,
       }
       return response
       
@@ -34,40 +37,37 @@ export class StudentService {
   }
 
   async findAll() {
-    let docs = await this.studentModel.find().populate('classroom');
-    let students = docs.map(student => {
-      const obj: unknown = student.classroom;
-      const className = obj['className'];
-      const response = {
-        id: student._id,
-        privateName: student.privateName,
-        classroom: className
-      }
-      return response  
+    
+    let docs = await this.studentModel.find()
+    const students = docs.map(doc => {
+      const student = doc.toObject()
+      student.id = student._id;
+      delete(student.__v)
+      delete(student._id)
+      return student
     })
-
     return students
   }
 
   async findOne(id: string){
-    const student = await this.studentModel.findById(id).populate('classroom');
-    const obj: unknown = student.classroom;
-    const className = obj['className'];
-    const response = {
-      id: student._id,
-      privateName: student.privateName,
-      classroom: className
-    }
-    return response  
-
+    const doc = await this.studentModel.findById(id)
+    const student = doc.toObject();
+    student.id = student._id
+    delete(student.__v)
+    delete(student._id)
+    return student
   }
 
   async update(id: string, student: Student) {
     const studentDoc = await this.studentModel.findById(id)
+
     const updatedObj = updateProperties<Student>(student, studentDoc)
+
     const savedStudent = await studentDoc.save();
-    const fetchedStudent = await this.findOne(id)
-    return fetchedStudent
+
+    const fetchedStudent = await this.studentModel.findById(id)
+
+    return fetchedStudent.toObject()
   }
 
   async remove(id: string) {

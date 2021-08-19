@@ -1,51 +1,68 @@
-import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
-import { CreateClassroomDto } from './dto/create-classroom.dto';
-import { UpdateClassroomDto } from './dto/update-classroom.dto';
-import { Classroom } from './schemas/classroom.schema'
-import { renameProperties } from '../../utils/functions'
-import { ObjectRenameFieldsMap } from '../../utils/functions';
+import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
+import { CreateClassroomRequestDto } from './dto/create-classroom-request.dto';
+import { CreateClassroomResponseDto } from './dto/create-classroom-response.dto'
+import { Classroom } from '../graphql'
+
+
 
 
 /**
  * dtoToSchemaDictionary
  * Creates a mapping between dto and schema nameing
  */
-const dtoToSchemaDictionary: ObjectRenameFieldsMap = [
-  {from: "name", to:"className"},
-  {from: "size", to:"classSize"},
-];
+// const dtoToSchemaDictionary: ObjectRenameFieldsMap = [
+//   {from: "className", to:"name"},
+//   {from: "classSize", to:"size"},
+// ];
 
-@Injectable()
-export class createClassroom_DtoToSchemaPipe implements PipeTransform<CreateClassroomDto, Classroom> {
-  transform(value: CreateClassroomDto, metadata: ArgumentMetadata): Classroom {
-    
-    const classroom = renameProperties<CreateClassroomDto, Classroom>({from: value, map: dtoToSchemaDictionary})
-    
-    return classroom
-  }
-}
 
-export class createClassroom_SchemaToDtoPipe implements PipeTransform<Classroom, CreateClassroomDto>{
-  transform(value: Classroom, metadata: ArgumentMetadata): CreateClassroomDto {
-    let classroomDto = renameProperties<Classroom, CreateClassroomDto>({from: value, map: dtoToSchemaDictionary, isReversedMap:true})
+// @Injectable()
+// export class Classroom_DtoToSchemaPipe implements PipeTransform<CreateClassroomRequestDto, Classroom> {
+  
+//   transform(value: ClassroomDto, metadata: ArgumentMetadata): Classroom {
+
+//     const classroom: Classroom = new Classroom();
+
+//     classroom.name = value.className
+//     classroom.size = value.classSize 
+    
+//     return classroom
+//   }
+// }
+
+export class Classroom_SchemaToDtoPipe implements PipeTransform<Classroom, CreateClassroomRequestDto>{
+  transform(value: Classroom, metadata: ArgumentMetadata): CreateClassroomRequestDto {
+    
+    const classroomDto: CreateClassroomRequestDto = new CreateClassroomRequestDto()
+    classroomDto.className = value.name
+    classroomDto.classSize = value.size
     return classroomDto
+
   }
 }
 
 
 
 
-@Injectable()
-export class updateClassroom_DtoToSchemaPipe extends createClassroom_DtoToSchemaPipe {
-  transform(value: UpdateClassroomDto, metadata: ArgumentMetadata): any {
+// @Injectable()
+// export class createClassroom_DtoToSchemaPipe implements PipeTransform<CreateClassroomResponseDto, Classroom> {
+  
+//   transform(value: CreateClassroomResponseDto, metadata: ArgumentMetadata): Classroom {
+
+//     const classroom = renameProperties<CreateClassroomRequestDto, Classroom>({from: value, map: dtoToSchemaDictionary})
     
-    return super.transform(value, metadata)
-  }
-}
+//     return classroom
+//   }
+// }
 
-export class updateClassroom_SchemaToDtoPipe implements PipeTransform<Classroom, UpdateClassroomDto>{
-  transform(value: Classroom, metadata: ArgumentMetadata): UpdateClassroomDto {
-    const classroomDto = renameProperties<Classroom, UpdateClassroomDto>({from: value, map: dtoToSchemaDictionary, isReversedMap:true})
-    return classroomDto
-  }
-}
+// export class createClassroom_SchemaToDtoPipe implements PipeTransform<Classroom, ClassroomDto>{
+//   transform(value: Classroom, metadata: ArgumentMetadata): ClassroomDto {
+    
+
+
+//     return classroomDto
+//   }
+// }
+
+
+

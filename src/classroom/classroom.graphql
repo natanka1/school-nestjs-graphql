@@ -1,9 +1,14 @@
+scalar Void
+
 type Query {
   classrooms: [Classroom]
+  getClassroom(name: String) : Classroom
 }
 
 type Mutation {
   createClassroom(createClassroomInput: CreateClassroomInput): Classroom
+  deleteClassroom(name: String!) : Void
+  updateClassroom(name: String!, updateClassroomInput: UpdateClassroomInput): Classroom
 }
 
 type Classroom {
@@ -11,7 +16,12 @@ type Classroom {
   size: Int
 }
 
-input CreateClassroomInput {
+input CreateClassroomInput  {
   name: String
-  age: Int
+  size: Int
+}
+
+input UpdateClassroomInput  {
+  name: String
+  size: Int
 }

@@ -23,7 +23,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
 @Catch(BadRequestException)
 export class BadRequestExceptionFilter implements ExceptionFilter {
     catch(exception: BadRequestException, host: ArgumentsHost){
-        console.log('bad request exception catched')
         const ctx = host.switchToHttp();const response = ctx.getResponse<Response>();
         const request = ctx.getRequest<Request>();
         const status = exception.getStatus();

@@ -17,9 +17,9 @@ import {join} from 'path'
       playground: true,
       typePaths: ['./**/*.graphql'], 
       installSubscriptionHandlers: true,
-    }), 
-    ClassroomModule, 
+    }),
     MongooseModule.forRoot(process.env.DB_URL), 
+    ClassroomModule, 
     StudentModule ]
 
 })

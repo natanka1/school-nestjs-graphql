@@ -1,0 +1,27 @@
+scalar Void
+type Query {
+    students: [Student]!
+    getStudent(id: ID!): Student
+}
+
+type Mutation {
+    createStudent(createStudentInput: CreateStudentInput): Student
+    updateStudent(id:ID, updateStudentInput: UpdateStudentInput): Student
+    deleteStudent(id:ID!): Void
+}
+
+type Student {
+    id: ID
+    name: String
+    classroomName: String
+}
+
+input CreateStudentInput {
+    name: String!
+    classroomName: String!
+}
+
+input UpdateStudentInput {
+    name:String
+    classroomName: String
+}

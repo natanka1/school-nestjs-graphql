@@ -10,7 +10,7 @@ export class Student {
     @Prop()
     privateName: string;
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Classroom'})
+    @Prop({String, ref: 'Classroom'})
     classroom: string;
 }
 

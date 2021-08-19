@@ -1,56 +1,54 @@
 import {Model} from 'mongoose'
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ConsoleLogger, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Classroom,ClassroomDocument} from 'src/classroom/schemas/classroom.schema';
 import { updateProperties } from '../../utils/functions';
+import { Classroom,ClassroomDocument} from './schemas/classroom.schema';
+import { CreateClassroomRequestDto } from './dto/create-classroom-request.dto';
+import { CreateClassroomResponseDto } from './dto/create-classroom-response.dto';
+import { schoolApi } from '../api/school'
+import { AxiosResponse } from 'axios'
 
 
 @Injectable()
 export class ClassroomService {
+
   constructor(@InjectModel(Classroom.name) private classroomModel: Model<ClassroomDocument>) {}
   
   private readonly logger = new Logger(ClassroomService.name)
 
-  async create(classroom: Classroom): Promise<Classroom> {
+  async create(classroomDto: CreateClassroomRequestDto): Promise<CreateClassroomResponseDto> {
     try{
-      const doc = new this.classroomModel(classroom)
-      const savedDoc = await doc.save();
-      const result = savedDoc.toObject()
-      delete result._id
-      delete result.__v
-      
-      this.logger.log("classroom created")
-      return result
+
+      const response: AxiosResponse<CreateClassroomResponseDto> = await schoolApi.post('/classroom', classroomDto)
+
+      this.logger.log(`classroom created: ${JSON.stringify(response.data)}`)
+
+      return response.data as CreateClassroomResponseDto
     } catch(err){
+
      throw(new BadRequestException(err));
     }
   }
 
-  async findAll() {
-    const doc = await this.classroomModel.find().select('-_id -__v ').exec();
-    return doc
+  async findAll(): Promise<[]> {
+    const response:AxiosResponse<[]> = await schoolApi.get('/classroom')
+    return response.data
   }
 
   async findOne({classroomName}: {classroomName:string}) {
-    const doc = await this.classroomModel.findOne({className: classroomName}).select('-_id -__v');
-    return doc
+    const response = await schoolApi.get(`/classroom/${classroomName}`);
+    return response.data
   }
 
   
-  async update(classroomName: string, classroom: Classroom) {
-    const classroomDoc = await this.classroomModel.findOne({className: classroomName})
-    if(!classroomDoc){
-      throw new Error('document not found')
-    }
-
-    const updatedObj = updateProperties<Classroom>(classroom, classroomDoc)
-
-    const doc = await classroomDoc.save()
+  async update(classroomName: string, classroomDto: CreateClassroomRequestDto): Promise<CreateClassroomResponseDto> {
+    const response: AxiosResponse<CreateClassroomResponseDto> = await schoolApi.patch(`/classroom/${classroomName}`, classroomDto)
     
-    return(doc)
+    return response.data
   }
 
-  remove({classroomName}:{classroomName: string}) {
-    return this.classroomModel.deleteOne({className: classroomName}).exec();
+  async remove({classroomName}:{classroomName: string}) {
+    const response: AxiosResponse<void> = await schoolApi.delete(`/classroom/${classroomName}`)
+    return;
   }
 }

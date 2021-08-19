@@ -2,11 +2,9 @@ import { Module } from '@nestjs/common';
 import {MongooseModule} from '@nestjs/mongoose'
 import { Classroom, ClassroomSchema } from 'src/classroom/schemas/classroom.schema';
 import { ClassroomService } from './classroom.service';
-import { ClassroomController } from './classroom.controller';
-
+import { ClassroomResolver } from './classroom.resolver';
 @Module({
   imports: [MongooseModule.forFeature([{name: Classroom.name, schema: ClassroomSchema}])],
-  controllers: [ClassroomController],
-  providers: [ClassroomService]
+  providers: [ClassroomService, ClassroomResolver]
 })
 export class ClassroomModule {}
