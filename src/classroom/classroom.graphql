@@ -2,26 +2,34 @@ scalar Void
 
 type Query {
   classrooms: [Classroom]
-  getClassroom(name: String) : Classroom
+  getClassroom(name: String): Classroom
 }
 
 type Mutation {
   createClassroom(createClassroomInput: CreateClassroomInput): Classroom
-  deleteClassroom(name: String!) : Void
-  updateClassroom(name: String!, updateClassroomInput: UpdateClassroomInput): Classroom
+  deleteClassroom(name: String!): Void
+  updateClassroom(
+    name: String!
+    updateClassroomInput: UpdateClassroomInput!
+  ): Classroom
 }
 
-type Classroom {
+interface IClassroom {
   name: String
   size: Int
 }
 
-input CreateClassroomInput  {
-  name: String
-  size: Int
+type Classroom implements IClassroom {
+  name: String!
+  size: Int!
 }
 
-input UpdateClassroomInput  {
+input CreateClassroomInput {
+  name: String!
+  size: Int!
+}
+
+input UpdateClassroomInput {
   name: String
   size: Int
 }

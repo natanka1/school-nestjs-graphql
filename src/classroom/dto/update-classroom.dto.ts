@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { UpdateClassroomInput } from '../../graphql';
 
-export class UpdateClassroomDto extends UpdateClassroomInput {
+export class UpdateClassroomDto implements UpdateClassroomInput {
     @ApiProperty({
         description: 'The name of the classroom',
         minimum: 1,

@@ -14,31 +14,20 @@ export class StudentResolver {
     ){}
     @Query('students')
     async getStudents(){
-        const docs = await this.studentService.findAll()
-        const studentsDto = docs
-            .map(student => (new createStudent_SchemaToDtoPipe()).transform(student, null))
-
-        return studentsDto
+        return []
     }
 
     @Query('getStudent')
     async getStudent(@Args('id') id: string){
 
-        const doc = await this.studentService.findOne(id)
-        const studentDto = (new createStudent_SchemaToDtoPipe()).transform(doc, null)
-        return studentDto
+        return null
     }
     
 
     @Mutation('createStudent')
     @UsePipes(new createStudent_DtoToSchemaPipe()) /** Transforming the DTO to Schema shape */
     async createStudent(@Args('createStudentInput') args: CreateStudentDto) : Promise<CreateStudentDto>{
-        const student = cast<CreateStudentDto, Student>(args)
-        
-        const studentDoc = await this.studentService.create(student);
-
-        const studentDto = (new createStudent_SchemaToDtoPipe()).transform(studentDoc, null)
-        return studentDto
+        return null
     }
 
     @Mutation('deleteStudent')
@@ -50,16 +39,9 @@ export class StudentResolver {
     async updateStudent(
         @Args('id') id: string, 
         @Args('updateStudentInput', updateStudent_DtoToSchemaPipe) updateStudentDto: UpdateStudentDto)
-        : Promise<UpdateStudentDto>
     {
         try{
-        const student = cast<UpdateStudentDto, Student>(updateStudentDto) 
-
-        let doc = await this.studentService.update(id, student)
-
-        const studentDto = (new updateStudent_SchemaToDtoPipe()).transform(doc, null)
-
-        return(studentDto)
+            null
         } catch(err){
             console.log(`error occured: ${err}`)
         }

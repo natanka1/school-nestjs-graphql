@@ -1,8 +1,8 @@
-import { Classroom } from "../../schemas/classroom.schema"
+import { ClassroomSchema } from "../../schemas/classroom.schema"
 
-export const classroomStub = (): Classroom => {
+export const classroomStub = (): ClassroomSchema => {
     return {
-        className: "Java",
-        classSize: 24
+        name: "Java",
+        size: 24
     }
 }

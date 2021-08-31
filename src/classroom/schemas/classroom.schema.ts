@@ -1,28 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { Classroom } from '../../graphql'
+import { ClassroomDto } from '../dto/classroom.dto'
 
-export type ClassroomDocument = Classroom & Document;
 
 @Schema()
-export class Classroom {
-  @Prop({
-    unique: true
-  })
-  className!: string;
-  @Prop()
-  classSize!: number;
+export class ClassroomSchema implements Classroom {
+
+  name: string;
+
+  size: number;
+
+  constructor(classroomDto: ClassroomDto){
+    this.name = classroomDto.className;
+    this.size = classroomDto.classSize;
+  }
 }
 
-export const ClassroomSchema = SchemaFactory.createForClass(Classroom);
-
-/**
- * CustomerSchema.virtual('fullName')
-.set(function (fullName: string) {
-  const [firstName, lastName] = fullName.split(' ');
-  this.set({ firstName, lastName });
-})
-.get(function() {
-  return `${this.firstName} ${this.lastName}`;
-});
- * 
- */

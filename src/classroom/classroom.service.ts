@@ -1,10 +1,8 @@
 import {Model} from 'mongoose'
 import { BadRequestException, ConsoleLogger, Injectable, Logger } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { updateProperties } from '../../utils/functions';
-import { Classroom,ClassroomDocument} from './schemas/classroom.schema';
 import { CreateClassroomRequestDto } from './dto/create-classroom-request.dto';
-import { CreateClassroomResponseDto } from './dto/create-classroom-response.dto';
+import { ClassroomResponseDto } from './dto/classroom-response.dto';
 import { schoolApi } from '../api/school'
 import { AxiosResponse } from 'axios'
 
@@ -12,18 +10,18 @@ import { AxiosResponse } from 'axios'
 @Injectable()
 export class ClassroomService {
 
-  constructor(@InjectModel(Classroom.name) private classroomModel: Model<ClassroomDocument>) {}
+  constructor() {}
   
   private readonly logger = new Logger(ClassroomService.name)
 
-  async create(classroomDto: CreateClassroomRequestDto): Promise<CreateClassroomResponseDto> {
+  async create(classroomDto: CreateClassroomRequestDto): Promise<CreateClassroomRequestDto> {
     try{
 
-      const response: AxiosResponse<CreateClassroomResponseDto> = await schoolApi.post('/classroom', classroomDto)
+      const response: AxiosResponse<CreateClassroomRequestDto> = await schoolApi.post('/classroom', classroomDto)
 
       this.logger.log(`classroom created: ${JSON.stringify(response.data)}`)
 
-      return response.data as CreateClassroomResponseDto
+      return response.data as CreateClassroomRequestDto
     } catch(err){
 
      throw(new BadRequestException(err));
@@ -41,8 +39,8 @@ export class ClassroomService {
   }
 
   
-  async update(classroomName: string, classroomDto: CreateClassroomRequestDto): Promise<CreateClassroomResponseDto> {
-    const response: AxiosResponse<CreateClassroomResponseDto> = await schoolApi.patch(`/classroom/${classroomName}`, classroomDto)
+  async update(classroomName: string, createClassroomRequestDto: CreateClassroomRequestDto): Promise<CreateClassroomRequestDto> {
+    const response: AxiosResponse<CreateClassroomRequestDto> = await schoolApi.patch(`/classroom/${classroomName}`, createClassroomRequestDto)
     
     return response.data
   }

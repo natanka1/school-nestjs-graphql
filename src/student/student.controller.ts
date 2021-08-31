@@ -17,27 +17,19 @@ export class StudentController {
   @Post()
   @UsePipes(new createStudent_DtoToSchemaPipe())
   async create(@Body() createStudentDto: CreateStudentDto) {
-    const student = cast<CreateStudentDto, Student>(createStudentDto)
 
-    const studentDoc = await this.studentService.create(student);
-    const studentDto = (new createStudent_SchemaToDtoPipe()).transform(studentDoc, null)
 
-    return studentDto
+    return false
   }
 
   @Get()
   async findAll() {
-    const docs = await this.studentService.findAll()
-    const studentDtos = docs
-        .map(student => (new createStudent_SchemaToDtoPipe()).transform(student, null))
-    return studentDtos
+    return false
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const doc = await this.studentService.findOne(id)
-    const studentDto = (new createStudent_SchemaToDtoPipe()).transform(doc, null)
-    return studentDto
+    return null
   }
 
   @Patch(':id')
